@@ -1,7 +1,7 @@
 name: dart_example
 
 environment:
-  sdk: '^3.5.0-105.0.dev'
+  sdk: '^3.3.4'
 dependencies:
 
 dev_dependencies:
