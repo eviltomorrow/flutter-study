@@ -1,18 +1,23 @@
-void main(){
-  // print(fetchUserOrder());
+import 'dart:io';
+import 'package:http/http.dart' as http;
 
-  print(fetchUserOrder2());
+main() {
+  _startMethod();
+
+  print("C开始");
 }
 
-String createOrderMessage(){
-  var order = fetchUserOrder();
-  return 'Your order is: $order';
+Future _startMethod() async {
+  print("A开始执行这个方法~");
+  print(await getHttp());
+  print("A执行结束");
 }
 
-Future<String> fetchUserOrder() => Future.delayed(const Duration(seconds: 2), () {
-  print('Future function run');
-  return 'Large Latte';
-});
+Future<String> getHttp() async {
+  final result = await http.get(Uri.parse("https://www.baidu.com"));
+  return "请求到的数据：" + result.body.toString();
+}
 
-Future<void> fetchUserOrder2() => Future.delayed(const Duration(seconds: 2), () => throw Exception('Logout failed'));
-
+doTest() async {
+  sleep(Duration(seconds: 10));
+}
