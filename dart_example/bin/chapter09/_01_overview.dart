@@ -1,27 +1,50 @@
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
-
-void main() async {
-  http.get(Uri.parse("https://www.baidu.com")).then((response) {
-    if (response.statusCode == 200) {
-      print("success! baidu");
-    }
+void main() {
+  print('begin');
+  syncFunc();
+  asyncFunc();
+  asyncFunc2();
+  var f = asyncFunc3();
+  f.then((_) {
+    print('asyncFunc3 then');
   });
-  http.get(Uri.parse("https://www.baidu.com")).then((response) {
-    if (response.statusCode == 200) {
-      print("success! baidu2");
-    }
+  closeFunc(() {
+    return () {
+      print('hello');
+    };
   });
-  print("hi");
-  final content = await _readFileAsync("_01_overview.dart");
-  print(content);
-  print("over");
+  // closeFunc(() async {
+  //   print('close run2');
+  // });
+  print('end');
 }
 
-Future<String> _readFileAsync(String path) async {
-  final file = File(path);
-  return file.readAsString().then((_) {
-    return 'callback';
+void syncFunc() {
+  sleep(Duration(seconds: 1));
+  print('syncFunc complete');
+}
+
+void asyncFunc() async {
+  print('asyncFunc complete');
+}
+
+void asyncFunc2() {
+  Future(() {
+    print('asyncFunc2');
   });
+}
+
+Future asyncFunc3() {
+  return Future(() {
+    print('asyncFunc3');
+  });
+}
+
+void asyncFunc4() async {
+  print('asyncFunc4 begin');
+}
+
+void closeFunc(Function body()) {
+  body()();
 }
