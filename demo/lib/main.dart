@@ -34,6 +34,12 @@ class App extends StatelessWidget {
                 // height: 40,
                 child: TextFieldPage('密码', true),
               ),
+              _buildRow(),
+              SizedBox(
+                width: 300,
+                child: _buildFlex(),
+              ),
+              _buildWrap(),
             ],
           )),
     );
@@ -142,4 +148,58 @@ class _TextFieldState extends State<TextFieldPage> {
       controller: _controller,
     );
   }
+}
+
+Widget _buildRow() {
+  return const Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text('Hello world'),
+    ],
+  );
+}
+
+Widget _buildFlex() {
+  return Flex(
+    direction: Axis.horizontal,
+    children: [
+      Expanded(
+        flex: 1,
+        child: Container(
+          height: 80,
+          color: Colors.red,
+          child: const Center(
+            child: Text('Red'),
+          ),
+        ),
+      ),
+      Expanded(
+        flex: 2,
+        child: Container(
+          height: 80,
+          color: Colors.blue,
+          child: const Center(
+            child: Text('Blue'),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildWrap() {
+  List<SizedBox> list = [];
+  for (int i = 0; i < 10; i++) {
+    list.add(const SizedBox(
+      height: 30,
+      width: 150,
+      child: ColoredBox(
+        color: Colors.blue,
+        child: Text('Hello world'),
+      ),
+    ));
+  }
+  return Wrap(
+    children: list,
+  );
 }
