@@ -15,35 +15,74 @@ class App extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Scaffold'),
-          ),
-          body: Column(
-            children: [
-              _buildContainer(),
-              _buildDecorateBox(),
-              _buildTextRich(),
-              _buildElevatedButton(),
-              const SizedBox(
-                width: 300,
-                // height: 40,
-                child: TextFieldPage('用户名', false),
-              ),
-              const SizedBox(
-                width: 300,
-                // height: 40,
-                child: TextFieldPage('密码', true),
-              ),
-              _buildRow(),
-              SizedBox(
-                width: 300,
-                child: _buildFlex(),
-              ),
-              _buildWrap(),
-            ],
-          )),
+        appBar: AppBar(
+          title: const Text('Scaffold'),
+        ),
+        // body: SingleChildScrollView(
+        //     child: Column(
+        //   children: [
+        //     _buildContainer(),
+        //     _buildDecorateBox(),
+        //     _buildTextRich(),
+        //     _buildElevatedButton(),
+        //     const SizedBox(
+        //       width: 300,
+        //       // height: 40,
+        //       child: TextFieldPage('用户名', false),
+        //     ),
+        //     const SizedBox(
+        //       width: 300,
+        //       // height: 40,
+        //       child: TextFieldPage('密码', true),
+        //     ),
+        //     _buildRow(),
+        //     SizedBox(
+        //       width: 300,
+        //       child: _buildFlex(),
+        //     ),
+        //     _buildWrap(),
+        //     _buildStack(),
+        //     _buildListView(),
+        //   ],
+        body: const ScrollControllerPage(),
+      ),
     );
   }
+}
+
+Widget _buildScaffold() {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Scaffold'),
+    ),
+    body: SingleChildScrollView(
+      child: Column(
+        children: [
+          _buildContainer(),
+          _buildDecorateBox(),
+          _buildTextRich(),
+          _buildElevatedButton(),
+          const SizedBox(
+            width: 300,
+            // height: 40,
+            child: TextFieldPage('用户名', false),
+          ),
+          const SizedBox(
+            width: 300,
+            // height: 40,
+            child: TextFieldPage('密码', true),
+          ),
+          _buildRow(),
+          SizedBox(
+            width: 300,
+            child: _buildFlex(),
+          ),
+          _buildWrap(),
+          _buildStack(),
+        ],
+      ),
+    ),
+  );
 }
 
 Widget _buildContainer() {
@@ -202,4 +241,87 @@ Widget _buildWrap() {
   return Wrap(
     children: list,
   );
+}
+
+Widget _buildStack() {
+  return Stack(
+    alignment: Alignment.center,
+    children: [
+      Container(
+        color: Colors.grey,
+        width: 40,
+        height: 40,
+      ),
+      Positioned(
+        top: 0,
+        left: 0,
+        child: Container(
+          color: Colors.green,
+          width: 20,
+          height: 20,
+        ),
+      ),
+    ],
+  );
+}
+
+class ScrollControllerPage extends StatefulWidget {
+  const ScrollControllerPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _ScrollControllerPageState();
+}
+
+class _ScrollControllerPageState extends State<ScrollControllerPage> {
+  final ScrollController _controller = ScrollController();
+  bool showToTopButton = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller.addListener(() {
+      if (_controller.offset < 150 && showToTopButton) {
+        setState(() {
+          showToTopButton = false;
+        });
+      } else if (_controller.offset >= 150 && showToTopButton == false) {
+        setState(() {
+          showToTopButton = true;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('ScrollController'),
+      ),
+      body: ListView.separated(
+        controller: _controller,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Center(
+              child: Text('Item $index'),
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const Divider(
+            color: Colors.grey,
+          );
+        },
+        itemCount: 30,
+      ),
+      floatingActionButton: !showToTopButton
+          ? null
+          : FloatingActionButton(
+              child: const Icon(Icons.arrow_upward),
+              onPressed: () {
+                _controller.jumpTo(0);
+              }),
+    );
+  }
 }
