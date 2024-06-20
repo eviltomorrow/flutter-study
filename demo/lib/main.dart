@@ -44,7 +44,8 @@ class App extends StatelessWidget {
         //     _buildStack(),
         //     _buildListView(),
         //   ],
-        body: const ScrollControllerPage(),
+        // body: const ScrollControllerPage(),
+        body: const ScrollNotificationPage(),
       ),
     );
   }
@@ -296,9 +297,9 @@ class _ScrollControllerPageState extends State<ScrollControllerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('ScrollController'),
-      ),
+      // appBar: AppBar(
+      //     // title: const Text('ScrollController'),
+      //     ),
       body: ListView.separated(
         controller: _controller,
         itemBuilder: (BuildContext context, int index) {
@@ -322,6 +323,60 @@ class _ScrollControllerPageState extends State<ScrollControllerPage> {
               onPressed: () {
                 _controller.jumpTo(0);
               }),
+    );
+  }
+}
+
+class ScrollNotificationPage extends StatefulWidget {
+  const ScrollNotificationPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _ScrollNotificationPageState();
+}
+
+class _ScrollNotificationPageState extends State<ScrollNotificationPage> {
+  String _progress = "0%";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Scrollbar(
+        child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification notification) {
+              double progress = notification.metrics.pixels /
+                  notification.metrics.maxScrollExtent;
+
+              setState(() {
+                _progress = "${(progress * 100).toInt()}%";
+              });
+              return false;
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                ListView.separated(
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Center(
+                        child: Text('Item $index'),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const Divider(
+                      color: Colors.grey,
+                    );
+                  },
+                  itemCount: 30,
+                ),
+                CircleAvatar(
+                  radius: 45,
+                  backgroundColor: Colors.black54,
+                  child: Text(_progress),
+                )
+              ],
+            )),
+      ),
     );
   }
 }
